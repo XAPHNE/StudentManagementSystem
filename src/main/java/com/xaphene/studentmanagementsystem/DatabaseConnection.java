@@ -1,0 +1,20 @@
+package com.xaphene.studentmanagementsystem;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+
+public class DatabaseConnection {
+    public static Connection databaseLink;
+    public static Connection connectDb(){
+        String databaseName = "studentManagementSystem";
+        String url = "jdbc:mysql://localhost/" + databaseName;
+        String databaseUser = "admin";
+        String databasePassword = "admin";
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            databaseLink = DriverManager.getConnection(url, databaseUser, databasePassword);
+            return databaseLink;
+        }catch (Exception e){e.printStackTrace();}
+        return null;
+    }
+}

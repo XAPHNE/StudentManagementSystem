@@ -1,0 +1,84 @@
+package com.xaphene.studentmanagementsystem;
+
+import io.github.palexdev.materialfx.controls.MFXPasswordField;
+import io.github.palexdev.materialfx.controls.MFXTextField;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
+public class LoginController {
+    @FXML
+    public MFXTextField usernameMFXTextField;
+    @FXML
+    public MFXPasswordField passwordMFXPasswordField;
+    @FXML
+    public Button loginButton;
+    @FXML
+    private Button closeButton;
+
+    private Connection connect;
+    private PreparedStatement prepare;
+    private ResultSet result;
+
+    @FXML
+    protected void loginButtonOnAction(){
+        String sql = "SELECT * FROM admin WHERE username = ? AND password = ?";
+        connect = DatabaseConnection.connectDb();
+        try {
+            Alert alert;
+            prepare = connect.prepareStatement(sql);
+            prepare.setString(1, usernameMFXTextField.getText());
+            prepare.setString(2, passwordMFXPasswordField.getText());
+            result = prepare.executeQuery();
+//            EMPTY FIELD CHECK
+            if (usernameMFXTextField.getText().isEmpty() || passwordMFXPasswordField.getText().isEmpty()){
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Please fill all blank fields");
+                alert.showAndWait();
+            }else {
+                if (result.next()) {
+//                    PROCEDING TO DASHBOARD FORM
+                    alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Information Message");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Login Successful");
+                    alert.showAndWait();
+//                    HIDING LOGIN FORM
+                    loginButton.getScene().getWindow().hide();
+//                    LINKING DASHBOARD
+                    Parent root = FXMLLoader.load(getClass().getResource("fxml/dashboard-view.fxml"));
+                    Stage stage = new Stage();
+                    Scene scene = new Scene(root);
+                    stage.initStyle(StageStyle.TRANSPARENT);
+                    stage.setScene(scene);
+                    stage.show();
+                }else {
+//                    ERROR MESSAGE WILL APPEAR
+                    alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Error Message");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Incorrect Username/Password");
+                    alert.showAndWait();
+                }
+            }
+        }catch (Exception e){e.printStackTrace();}
+    }
+    @FXML
+    public void closeButtonOnAction(ActionEvent e) {
+//        Stage stage = (Stage) closeButton.getScene().getWindow();
+//        stage.close();
+        System.exit(0);
+    }
+}
