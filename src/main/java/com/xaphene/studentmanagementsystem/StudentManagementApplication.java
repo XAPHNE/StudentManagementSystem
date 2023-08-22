@@ -18,7 +18,7 @@ public class StudentManagementApplication extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(StudentManagementApplication.class.getResource("fxml/login-view.fxml"));
         Parent root = fxmlLoader.load();
         Scene scene = new Scene(root);
-        primaryStage.setTitle("Login!");
+        primaryStage.setTitle("Login | Student Management System");
         root.setOnMousePressed((MouseEvent event) ->{
             x = event.getSceneX();
             y = event.getSceneY();

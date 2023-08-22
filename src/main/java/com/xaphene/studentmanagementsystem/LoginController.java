@@ -11,7 +11,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-
+import javafx.scene.input.MouseEvent;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -29,6 +29,10 @@ public class LoginController {
     private Connection connect;
     private PreparedStatement prepare;
     private ResultSet result;
+
+    private double x = 0;
+    private double y = 0;
+    private Button home_btn;
 
     @FXML
     protected void loginButtonOnAction(){
@@ -61,6 +65,20 @@ public class LoginController {
                     Parent root = FXMLLoader.load(getClass().getResource("fxml/dashboard-view.fxml"));
                     Stage stage = new Stage();
                     Scene scene = new Scene(root);
+                    stage.setTitle("Dashboard | Student Management System");
+                    root.setOnMousePressed((MouseEvent event) ->{
+                        x = event.getSceneX();
+                        y = event.getSceneY();
+                    });
+                    root.setOnMouseDragged((MouseEvent event) ->{
+                        stage.setX(event.getSceneX() -x);
+                        stage.setY(event.getSceneY() -y);
+
+                        stage.setOpacity(.8);
+                    });
+                    root.setOnMouseReleased((MouseEvent event) ->{
+                        stage.setOpacity(1);
+                    });
                     stage.initStyle(StageStyle.TRANSPARENT);
                     stage.setScene(scene);
                     stage.show();

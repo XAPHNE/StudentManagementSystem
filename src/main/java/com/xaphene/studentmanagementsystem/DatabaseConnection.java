@@ -11,7 +11,7 @@ public class DatabaseConnection {
         String databaseUser = "admin";
         String databasePassword = "admin";
         try {
-            Class.forName("com.mysql.jdbc.Driver");
+            Class.forName("com.mysql.cj.jdbc.Driver");
             databaseLink = DriverManager.getConnection(url, databaseUser, databasePassword);
             return databaseLink;
         }catch (Exception e){e.printStackTrace();}
