@@ -16,8 +16,8 @@
          <children>
             <AnchorPane prefHeight="400.0" prefWidth="300.0" styleClass="left-form" stylesheets="@../css/login-style.css" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
-                  <FontIcon iconColor="WHITE" iconLiteral="fas-graduation-cap" iconSize="150" layoutX="56.0" layoutY="145.0" />
-                  <Label layoutX="16.0" layoutY="214.0" text="Student Management System" textFill="WHITE">
+                  <FontIcon iconColor="WHITE" iconLiteral="fas-graduation-cap" iconSize="150" layoutX="56.0" layoutY="214.0" />
+                  <Label layoutX="16.0" layoutY="243.0" text="Student Management System" textFill="WHITE">
                      <font>
                         <Font size="18.0" />
                      </font>
@@ -31,12 +31,12 @@
                         <Font size="18.0" />
                      </font>
                   </Label>
-                  <MFXTextField fx:id="usernameMFXTextField" floatMode="BORDER" floatingText="Username" layoutX="22.0" layoutY="194.0" prefHeight="30.0" prefWidth="250.0" styleClass="mfx-text-field">
+                  <MFXTextField fx:id="usernameMFXTextField" floatMode="BORDER" floatingText="Username" layoutX="22.0" layoutY="194.0" prefHeight="30.0" prefWidth="250.0" styleClass="mfx-text-field" text="admin">
                      <cursor>
                         <Cursor fx:constant="TEXT" />
                      </cursor>
                   </MFXTextField>
-                  <MFXPasswordField fx:id="passwordMFXPasswordField" floatMode="BORDER" floatingText="Password" layoutX="22.0" layoutY="243.0" prefHeight="30.0" prefWidth="250.0" styleClass="mfx-password-field">
+                  <MFXPasswordField fx:id="passwordMFXPasswordField" floatMode="BORDER" floatingText="Password" layoutX="22.0" layoutY="243.0" prefHeight="30.0" prefWidth="250.0" styleClass="mfx-password-field" text="admin123">
                      <cursor>
                         <Cursor fx:constant="TEXT" />
                      </cursor>
