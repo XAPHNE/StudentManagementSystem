@@ -20,7 +20,7 @@
 <?import javafx.scene.text.Font?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/" fx:controller="com.xaphene.studentmanagementsystem.DashboardController">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.xaphene.studentmanagementsystem.DashboardController">
    <children>
       <AnchorPane fx:id="main_form" prefHeight="200.0" prefWidth="200.0">
          <children>
@@ -313,7 +313,7 @@
                                     </AnchorPane>
                                     <Button fx:id="addStudent_addBtn" layoutX="774.0" layoutY="485.0" mnemonicParsing="false" onAction="#addStudent_addBtn_onAction" prefHeight="35.0" prefWidth="85.0" styleClass="add-btn" stylesheets="@../css/dashboard-style.css" text="Add" />
                                     <Button fx:id="addStudent_updateBtn" layoutX="686.0" layoutY="485.0" mnemonicParsing="false" onAction="#addStudent_updateBtn_onAction" prefHeight="35.0" prefWidth="85.0" styleClass="update-btn" stylesheets="@../css/dashboard-style.css" text="Update" />
-                                    <Button fx:id="addStudent_deleteBtn" layoutX="598.0" layoutY="485.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="85.0" styleClass="delete-btn" stylesheets="@../css/dashboard-style.css" text="Delete" />
+                                    <Button fx:id="addStudent_deleteBtn" layoutX="598.0" layoutY="485.0" mnemonicParsing="false" onAction="#addStudent_deleteBtn_onAction" prefHeight="35.0" prefWidth="85.0" styleClass="delete-btn" stylesheets="@../css/dashboard-style.css" text="Delete" />
                                     <Button fx:id="addStudent_clearBtn" layoutX="510.0" layoutY="485.0" mnemonicParsing="false" onAction="#addStudent_clearBtn_onAction" prefHeight="35.0" prefWidth="85.0" styleClass="clear-btn" stylesheets="@../css/dashboard-style.css" text="Clear" />
                                  </children>
                               </AnchorPane>

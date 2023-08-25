@@ -568,6 +568,47 @@ public class DashboardController implements Initializable {
             }
         } catch (Exception e) {e.printStackTrace();}
     }
+    public void addStudent_deleteBtn_onAction () {
+        String deleteData = "DELETE FROM student WHERE studentNum = '" + addStudent_studentNum.getText() + "'";
+        connect = DatabaseConnection.connectDb();
+        try {
+            Alert alert;
+            if (addStudent_studentNum.getText().isEmpty()
+                    || addStudent_year.getSelectionModel().getSelectedItem() == null
+                    || addStudent_course.getSelectionModel().getSelectedItem() == null
+                    || addStudent_firstName.getText().isEmpty()
+                    || addStudent_lastName.getText().isEmpty()
+                    || addStudent_gender.getSelectionModel().getSelectedItem() == null
+                    || addStudent_birthDate.getValue() == null
+                    || addStudent_status.getSelectionModel().getSelectedItem() == null
+                    || GetData.path == null || GetData.path == "") {
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Fields cannot be empty");
+                alert.showAndWait();
+            } else {
+                alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Confirmation Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Are you sure you want to delete Student #: " + addStudent_studentNum.getText() + "?");
+                Optional<ButtonType> option = alert.showAndWait();
+                if (option.get().equals(ButtonType.OK)){
+                    statement = connect.createStatement();
+                    statement.executeUpdate(deleteData);
+                    alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Information Message");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Successfully Deleted!");
+                    alert.showAndWait();
+                    //  TO LOAD THE UPDATED TABLE AFTER OPERATION
+                    addStudentShowListData();
+                    // TO CLEAR THE FIELDS
+                    addStudent_clearBtn_onAction();
+                } else return;
+            }
+        } catch (Exception e) {e.printStackTrace();}
+    }
     public void addStudent_clearBtn_onAction () {
         addStudent_studentNum.setText("");
         addStudent_year.getSelectionModel().clearSelection();
