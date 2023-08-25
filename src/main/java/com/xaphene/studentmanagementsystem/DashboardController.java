@@ -1,5 +1,7 @@
 package com.xaphene.studentmanagementsystem;
 
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.collections.FXCollections;
@@ -29,6 +31,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.stream.Stream;
 
 public class DashboardController implements Initializable {
     @FXML
@@ -290,6 +293,7 @@ public class DashboardController implements Initializable {
             addStudent_genderList();
             addStudent_statusList();
             setAddStudent_courseList();
+            addStudent_search_onAction();
         } else if (event.getSource() == availableCourses_btn) {
             home_form.setVisible(false);
             addStudent_form.setVisible(false);
@@ -621,6 +625,40 @@ public class DashboardController implements Initializable {
         addStudent_imageView.setImage(null);
         GetData.path = "";
     }
+    @FXML
+    public void addStudent_search_onAction() {
+        // Assuming addStudentListD is a properly populated ObservableList<StudentData>
+        FilteredList<StudentData> filter = new FilteredList<>(addStudentListD, e -> true);
+
+        // Assuming addStudent_search is your TextField for searching
+        addStudent_search.textProperty().addListener((Observable, oldValue, newValue) -> {
+            filter.setPredicate(predicateStudentData -> {
+                if (newValue == null || newValue.isEmpty()) {
+                    return true;
+                }
+
+                String searchKey = newValue.toLowerCase();
+
+                // You can simplify the conditions using a stream and anyMatch
+                return Stream.of(
+                        predicateStudentData.getStudentNum().toString(),
+                        predicateStudentData.getYear(),
+                        predicateStudentData.getCourse(),
+                        predicateStudentData.getFirstName(),
+                        predicateStudentData.getLastName(),
+                        predicateStudentData.getGender(),
+                        predicateStudentData.getBirthDate().toString(),
+                        predicateStudentData.getStatus()
+                ).anyMatch(data -> data.toLowerCase().contains(searchKey));
+            });
+        });
+
+        SortedList<StudentData> sortList = new SortedList<>(filter);
+
+        // Assuming addStudent_tableView is your TableView
+        sortList.comparatorProperty().bind(addStudent_tableView.comparatorProperty());
+        addStudent_tableView.setItems(sortList);
+    }
 //    END CODE FOR ADD STUDENT FORM
 
 //    START CODE FOR AVAILABLE COURSES FORM
@@ -785,6 +823,7 @@ public class DashboardController implements Initializable {
         addStudent_genderList();
         addStudent_statusList();
         setAddStudent_courseList();
+        addStudent_search_onAction();
 
         availableCourseShowListData();
     }

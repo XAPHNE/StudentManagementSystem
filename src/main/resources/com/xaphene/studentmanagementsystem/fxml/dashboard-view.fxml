@@ -20,7 +20,7 @@
 <?import javafx.scene.text.Font?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.xaphene.studentmanagementsystem.DashboardController">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/" fx:controller="com.xaphene.studentmanagementsystem.DashboardController">
    <children>
       <AnchorPane fx:id="main_form" prefHeight="200.0" prefWidth="200.0">
          <children>
@@ -237,7 +237,7 @@
                                           <String fx:value="shadow" />
                                        </styleClass>
                                        <children>
-                                          <TextField fx:id="addStudent_search" layoutX="14.0" layoutY="14.0" prefHeight="24.0" prefWidth="270.0" promptText="Search" styleClass="search" stylesheets="@../css/dashboard-style.css" />
+                                          <TextField fx:id="addStudent_search" layoutX="14.0" layoutY="14.0" onAction="#addStudent_search_onAction" prefHeight="24.0" prefWidth="270.0" promptText="Search" styleClass="search" stylesheets="@../css/dashboard-style.css" />
                                           <FontIcon iconLiteral="fa-search" iconSize="20" layoutX="21.0" layoutY="33.0" />
                                           <TableView fx:id="addStudent_tableView" layoutX="14.0" layoutY="53.0" onMouseClicked="#addStudentSelect" prefHeight="200.0" prefWidth="847.0">
                                             <columns>
