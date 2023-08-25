@@ -30,8 +30,8 @@ public class LoginController {
     private PreparedStatement prepare;
     private ResultSet result;
 
-    private double x = 0;
-    private double y = 0;
+    private double xOffset = 0;
+    private double yOffset = 0;
     private Button home_btn;
 
     @FXML
@@ -66,17 +66,19 @@ public class LoginController {
                     Stage stage = new Stage();
                     Scene scene = new Scene(root);
                     stage.setTitle("Dashboard | Student Management System");
-                    root.setOnMousePressed((MouseEvent event) ->{
-                        x = event.getSceneX();
-                        y = event.getSceneY();
+                    // Make the window draggable
+                    root.setOnMousePressed((MouseEvent event) -> {
+                        xOffset = event.getSceneX();
+                        yOffset = event.getSceneY();
                     });
-                    root.setOnMouseDragged((MouseEvent event) ->{
-                        stage.setX(event.getSceneX() -x);
-                        stage.setY(event.getSceneY() -y);
+                    root.setOnMouseDragged((MouseEvent event) -> {
+                        stage.setX(event.getScreenX() - xOffset);
+                        stage.setY(event.getScreenY() - yOffset);
+                        stage.setOpacity(.6);
+                    });
 
-                        stage.setOpacity(.8);
-                    });
-                    root.setOnMouseReleased((MouseEvent event) ->{
+                    // Reset opacity on mouse release
+                    root.setOnMouseReleased((MouseEvent event) -> {
                         stage.setOpacity(1);
                     });
                     stage.initStyle(StageStyle.TRANSPARENT);

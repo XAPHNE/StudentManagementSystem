@@ -71,7 +71,7 @@ public class DashboardController implements Initializable {
     private TableColumn<StudentData, String> addStudent_col_year;
 
     @FXML
-    private ComboBox<?> addStudent_course;
+    private ComboBox<String> addStudent_course;
 
     @FXML
     private Button addStudent_deleteBtn;
@@ -83,7 +83,7 @@ public class DashboardController implements Initializable {
     private AnchorPane addStudent_form;
 
     @FXML
-    private ComboBox<?> addStudent_gender;
+    private ComboBox<String> addStudent_gender;
 
     @FXML
     private ImageView addStudent_imageView;
@@ -98,7 +98,7 @@ public class DashboardController implements Initializable {
     private TextField addStudent_search;
 
     @FXML
-    private ComboBox<?> addStudent_status;
+    private ComboBox<String> addStudent_status;
 
     @FXML
     private TextField addStudent_studentNum;
@@ -110,7 +110,7 @@ public class DashboardController implements Initializable {
     private Button addStudent_updateBtn;
 
     @FXML
-    private ComboBox<?> addStudent_year;
+    private ComboBox<String> addStudent_year;
 
     @FXML
     private Button availableCourse_addBtn;
@@ -241,8 +241,8 @@ public class DashboardController implements Initializable {
     @FXML
     private Label username;
 
-    private double x = 0;
-    private double y = 0;
+    private double xOffset = 0;
+    private double yOffset = 0;
     private Connection connect;
     private PreparedStatement prepare;
     private Statement statement;
@@ -334,17 +334,19 @@ public class DashboardController implements Initializable {
                 Stage stage = new Stage();
                 Scene scene = new Scene(root);
                 stage.setTitle("Login | Student Management System");
-                root.setOnMousePressed((MouseEvent event) ->{
-                    x = event.getSceneX();
-                    y = event.getSceneY();
+                // Make the window draggable
+                root.setOnMousePressed((MouseEvent event) -> {
+                    xOffset = event.getSceneX();
+                    yOffset = event.getSceneY();
                 });
-                root.setOnMouseDragged((MouseEvent event) ->{
-                    stage.setX(event.getSceneX() -x);
-                    stage.setY(event.getSceneY() -y);
+                root.setOnMouseDragged((MouseEvent event) -> {
+                    stage.setX(event.getScreenX() - xOffset);
+                    stage.setY(event.getScreenY() - yOffset);
+                    stage.setOpacity(.6);
+                });
 
-                    stage.setOpacity(.8);
-                });
-                root.setOnMouseReleased((MouseEvent event) ->{
+                // Reset opacity on mouse release
+                root.setOnMouseReleased((MouseEvent event) -> {
                     stage.setOpacity(1);
                 });
                 stage.initStyle(StageStyle.TRANSPARENT);
@@ -381,6 +383,7 @@ public class DashboardController implements Initializable {
         return listStudents;
     }
     private ObservableList <StudentData> addStudentListD;
+    @FXML
     public void addStudentShowListData () {
         addStudentListD = addStudentListData();
 
@@ -395,21 +398,30 @@ public class DashboardController implements Initializable {
 
         addStudent_tableView.setItems(addStudentListD);
     }
-    public void addStudentSelect () {
+    @FXML
+    public void addStudentSelect() {
         StudentData studentD = addStudent_tableView.getSelectionModel().getSelectedItem();
-        int num = addStudent_tableView.getSelectionModel().getSelectedIndex();
 
-        if ((num - 1 ) < - 1) {return;}
+        if (studentD == null) {
+            return; // No selected item, exit early
+        }
+
         addStudent_studentNum.setText(String.valueOf(studentD.getStudentNum()));
+        addStudent_year.setValue(studentD.getYear());
+        addStudent_course.setValue(studentD.getCourse());
         addStudent_firstName.setText(studentD.getFirstName());
         addStudent_lastName.setText(studentD.getLastName());
-        addStudent_birthDate.setValue(LocalDate.parse(String.valueOf(studentD.getBirthDate())));
+        addStudent_gender.setValue(studentD.getGender());
+        addStudent_birthDate.setValue(studentD.getBirthDate().toLocalDate());
+        addStudent_status.setValue(studentD.getStatus());
 
         String uri = "file:" + studentD.getImage();
         image = new Image(uri, 120, 170, false, true);
         addStudent_imageView.setImage(image);
         GetData.path = studentD.getImage();
     }
+
+    @FXML
     public void addStudent_yearList() {
         List <String> yearL = new ArrayList<>();
         for (String data: yearList) {
@@ -418,6 +430,7 @@ public class DashboardController implements Initializable {
         ObservableList ObList = FXCollections.observableArrayList(yearL);
         addStudent_year.setItems(ObList);
     }
+    @FXML
     public void addStudent_genderList(){
         List <String> genderL = new ArrayList<>();
         for (String data: genderList) {
@@ -426,6 +439,7 @@ public class DashboardController implements Initializable {
         ObservableList ObList = FXCollections.observableArrayList(genderL);
         addStudent_gender.setItems(ObList);
     }
+    @FXML
     public void addStudent_statusList(){
         List <String> statusL = new ArrayList<>();
         for (String data: statusList) {
@@ -434,6 +448,7 @@ public class DashboardController implements Initializable {
         ObservableList ObList = FXCollections.observableArrayList(statusL);
         addStudent_status.setItems(ObList);
     }
+    @FXML
     public void setAddStudent_courseList () {
         String listCourse = "SELECT * FROM course";
         connect = DatabaseConnection.connectDb();
@@ -447,6 +462,7 @@ public class DashboardController implements Initializable {
             addStudent_course.setItems(listC);
         } catch (Exception e) {e.printStackTrace();}
     }
+    @FXML
     public void addStudent_insertBtn_onAction(){
         FileChooser open = new FileChooser();
         open.setTitle("Select Image File");
@@ -458,6 +474,7 @@ public class DashboardController implements Initializable {
             GetData.path = file.getAbsolutePath();
         }
     }
+    @FXML
     public void addStudent_addBtn_onAction(){
         String insertData = "INSERT INTO student "
                 + "(studentNum, year, course, firstName, lastName, gender, birthDate, status, image, date) "
@@ -520,6 +537,7 @@ public class DashboardController implements Initializable {
             }
         } catch (Exception e) {e.printStackTrace();}
     }
+    @FXML
     public void addStudent_updateBtn_onAction () {
         String uri = GetData.path;
         uri = uri.replace("\\", "\\\\");
@@ -572,6 +590,7 @@ public class DashboardController implements Initializable {
             }
         } catch (Exception e) {e.printStackTrace();}
     }
+    @FXML
     public void addStudent_deleteBtn_onAction () {
         String deleteData = "DELETE FROM student WHERE studentNum = '" + addStudent_studentNum.getText() + "'";
         connect = DatabaseConnection.connectDb();
@@ -613,6 +632,7 @@ public class DashboardController implements Initializable {
             }
         } catch (Exception e) {e.printStackTrace();}
     }
+    @FXML
     public void addStudent_clearBtn_onAction () {
         addStudent_studentNum.setText("");
         addStudent_year.getSelectionModel().clearSelection();
