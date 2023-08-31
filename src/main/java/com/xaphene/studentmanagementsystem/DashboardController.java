@@ -25,7 +25,6 @@ import javafx.stage.StageStyle;
 import java.io.File;
 import java.net.URL;
 import java.sql.*;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -71,7 +70,7 @@ public class DashboardController implements Initializable {
     private TableColumn<StudentData, String> addStudent_col_year;
 
     @FXML
-    private ComboBox<String> addStudent_course;
+    private ComboBox<?> addStudent_course;
 
     @FXML
     private Button addStudent_deleteBtn;
@@ -83,7 +82,7 @@ public class DashboardController implements Initializable {
     private AnchorPane addStudent_form;
 
     @FXML
-    private ComboBox<String> addStudent_gender;
+    private ComboBox<?> addStudent_gender;
 
     @FXML
     private ImageView addStudent_imageView;
@@ -98,7 +97,7 @@ public class DashboardController implements Initializable {
     private TextField addStudent_search;
 
     @FXML
-    private ComboBox<String> addStudent_status;
+    private ComboBox<?> addStudent_status;
 
     @FXML
     private TextField addStudent_studentNum;
@@ -110,7 +109,7 @@ public class DashboardController implements Initializable {
     private Button addStudent_updateBtn;
 
     @FXML
-    private ComboBox<String> addStudent_year;
+    private ComboBox<?> addStudent_year;
 
     @FXML
     private Button availableCourse_addBtn;
@@ -194,22 +193,22 @@ public class DashboardController implements Initializable {
     private Button studentGrade_clearBtn;
 
     @FXML
-    private TableColumn<?, ?> studentGrade_col_course;
+    private TableColumn<StudentData, String> studentGrade_col_course;
 
     @FXML
-    private TableColumn<?, ?> studentGrade_col_final;
+    private TableColumn<StudentData, String> studentGrade_col_final;
 
     @FXML
-    private TableColumn<?, ?> studentGrade_col_firstSem;
+    private TableColumn<StudentData, String> studentGrade_col_firstSem;
 
     @FXML
-    private TableColumn<?, ?> studentGrade_col_secondSem;
+    private TableColumn<StudentData, String> studentGrade_col_secondSem;
 
     @FXML
-    private TableColumn<?, ?> studentGrade_col_studentNum;
+    private TableColumn<StudentData, String> studentGrade_col_studentNum;
 
     @FXML
-    private TableColumn<?, ?> studentGrade_col_year;
+    private TableColumn<StudentData, String> studentGrade_col_year;
 
     @FXML
     private Label studentGrade_course;
@@ -230,7 +229,7 @@ public class DashboardController implements Initializable {
     private TextField studentGrade_studentNum;
 
     @FXML
-    private TableView<?> studentGrade_tableView;
+    private TableView<StudentData> studentGrade_tableView;
 
     @FXML
     private Button studentGrade_updateBtn;
@@ -293,7 +292,7 @@ public class DashboardController implements Initializable {
             addStudent_genderList();
             addStudent_statusList();
             setAddStudent_courseList();
-            addStudent_search_onAction();
+            addStudent_search_onKeyTyped();
         } else if (event.getSource() == availableCourses_btn) {
             home_form.setVisible(false);
             addStudent_form.setVisible(false);
@@ -316,6 +315,8 @@ public class DashboardController implements Initializable {
             addStudent_btn.setStyle("-fx-background-color: transparent");
             availableCourses_btn.setStyle("-fx-background-color: transparent");
             studentGrade_btn.setStyle("-fx-background-color: linear-gradient(to bottom right, #3f82ae, #26bf7d);");
+            studentGradesShowListData();
+            studentGradeSearch_onKeyTyped();
         }
     }
 //    END CODE FOR FORM SWITCHING
@@ -407,13 +408,9 @@ public class DashboardController implements Initializable {
         }
 
         addStudent_studentNum.setText(String.valueOf(studentD.getStudentNum()));
-        addStudent_year.setValue(studentD.getYear());
-        addStudent_course.setValue(studentD.getCourse());
         addStudent_firstName.setText(studentD.getFirstName());
         addStudent_lastName.setText(studentD.getLastName());
-        addStudent_gender.setValue(studentD.getGender());
         addStudent_birthDate.setValue(studentD.getBirthDate().toLocalDate());
-        addStudent_status.setValue(studentD.getStatus());
 
         String uri = "file:" + studentD.getImage();
         image = new Image(uri, 120, 170, false, true);
@@ -524,6 +521,17 @@ public class DashboardController implements Initializable {
                     java.sql.Date sqlDate = new java.sql.Date(date.getTime());
                     prepare.setString(10, String.valueOf(sqlDate));
                     prepare.executeUpdate();
+                    String insertStudentGrade = "INSERT INTO student_grade "
+                            + "(studentNum, year, course, first_sem, second_sem, final) "
+                            + "VALUES (?,?,?,?,?,?)";
+                    prepare = connect.prepareStatement(insertStudentGrade);
+                    prepare.setString(1, addStudent_studentNum.getText());
+                    prepare.setString(2, (String) addStudent_year.getSelectionModel().getSelectedItem());
+                    prepare.setString(3, (String) addStudent_course.getSelectionModel().getSelectedItem());
+                    prepare.setString(4, "0");
+                    prepare.setString(5, "0");
+                    prepare.setString(6, "0");
+                    prepare.executeUpdate();
                     alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Information Message");
                     alert.setHeaderText(null);
@@ -619,6 +627,17 @@ public class DashboardController implements Initializable {
                 if (option.get().equals(ButtonType.OK)){
                     statement = connect.createStatement();
                     statement.executeUpdate(deleteData);
+                    String checkData = "SELECT studentNum FROM student_grade "
+                            + "WHERE studentNum = '" + addStudent_studentNum.getText() + "'";
+                    prepare = connect.prepareStatement(checkData);
+                    result = prepare.executeQuery();
+                    //  IF STUDENT NUMBER EXISTS THEN PROCE TO DELETE
+                    if (result.next()) {
+                        String deleteGrade = "DELETE FROM student_grade WHERE "
+                                + "studentNum = '" + addStudent_studentNum.getText() + "'";
+                        statement = connect.createStatement();
+                        statement.executeUpdate(deleteGrade);
+                    }
                     alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Information Message");
                     alert.setHeaderText(null);
@@ -646,7 +665,7 @@ public class DashboardController implements Initializable {
         GetData.path = "";
     }
     @FXML
-    public void addStudent_search_onAction() {
+    public void addStudent_search_onKeyTyped() {
         // Assuming addStudentListD is a properly populated ObservableList<StudentData>
         FilteredList<StudentData> filter = new FilteredList<>(addStudentListD, e -> true);
 
@@ -835,6 +854,77 @@ public class DashboardController implements Initializable {
     }
 //    END CODE FOR AVAILABLE COURSES FORM
 
+//    START CODE FOR GRADES OF STUDENTS FORM
+    public ObservableList <StudentData>  studentGradesListData(){
+        ObservableList <StudentData> listData = FXCollections.observableArrayList();
+        String sql = "SELECT * FROM student_grade";
+        connect = DatabaseConnection.connectDb();
+        try {
+            StudentData studentD;
+            prepare = connect.prepareStatement(sql);
+            result = prepare.executeQuery();
+            while(result.next()){
+                studentD = new StudentData(result.getInt("studentNum")
+                        , result.getString("year")
+                        , result.getString("course")
+                        , result.getDouble("first_sem")
+                        , result.getDouble("second_sem")
+                        , result.getDouble("final"));
+                listData.add(studentD);
+            }
+        } catch (Exception e) {e.printStackTrace();}
+        return listData;
+    }
+    private ObservableList <StudentData> studentGradesList;
+    public void studentGradesShowListData () {
+        studentGradesList = studentGradesListData();
+        studentGrade_col_studentNum.setCellValueFactory(new PropertyValueFactory<>("studentNum"));
+        studentGrade_col_year.setCellValueFactory(new PropertyValueFactory<>("year"));
+        studentGrade_col_course.setCellValueFactory(new PropertyValueFactory<>("course"));
+        studentGrade_col_firstSem.setCellValueFactory(new PropertyValueFactory<>("firstSem"));
+        studentGrade_col_secondSem.setCellValueFactory(new PropertyValueFactory<>("secondSem"));
+        studentGrade_col_final.setCellValueFactory(new PropertyValueFactory<>("finals"));
+        studentGrade_tableView.setItems(studentGradesList);
+    }
+    public void studentGradesSelect () {
+        StudentData studentD = studentGrade_tableView.getSelectionModel().getSelectedItem();
+        int num = studentGrade_tableView.getSelectionModel().getSelectedIndex();
+        if ((num - 1) < - 1) {return;}
+        studentGrade_studentNum.setText(String.valueOf(studentD.getStudentNum()));
+        studentGrade_year.setText(studentD.getYear());
+        studentGrade_course.setText(studentD.getCourse());
+        studentGrade_firstSem.setText(String.valueOf(studentD.getFirstSem()));
+        studentGrade_secondSem.setText(String.valueOf(studentD.getSecondSem()));
+    }
+    public void studentGradeSearch_onKeyTyped() {
+        FilteredList <StudentData> filter = new FilteredList<>(studentGradesList, e-> true);
+        studentGrade_search.textProperty().addListener((Observable, oldValue, newValue) ->{
+            filter.setPredicate(predictateStudentData ->{
+                if(newValue.isEmpty() || newValue == null) {
+                    return true;
+                }
+                String searchKey = newValue.toLowerCase();
+                if (predictateStudentData.getStudentNum().toString().contains(searchKey)){
+                    return true;
+                } else if (predictateStudentData.getYear().toLowerCase().contains(searchKey)){
+                    return true;
+                } else if (predictateStudentData.getCourse().toLowerCase().contains(searchKey)){
+                    return true;
+                } else if (predictateStudentData.getFirstSem().toString().contains(searchKey)){
+                    return true;
+                } else if (predictateStudentData.getSecondSem().toString().contains(searchKey)){
+                    return true;
+                } else if (predictateStudentData.getFinals().toString().contains(searchKey)){
+                    return true;
+                } else return false;
+            });
+        });
+        SortedList <StudentData> sortList = new SortedList<>(filter);
+        sortList.comparatorProperty().bind(studentGrade_tableView.comparatorProperty());
+        studentGrade_tableView.setItems(sortList);
+    }
+//    END CODE FOR GRADES OF STUDENTS FORM
+
     @Override
     public void initialize (URL url, ResourceBundle resourceBundle) {
         //  TO SHOW IMMEDIATELY WHEN PROCEEDED TO DASHBOARD APPLICATION FORM
@@ -843,8 +933,10 @@ public class DashboardController implements Initializable {
         addStudent_genderList();
         addStudent_statusList();
         setAddStudent_courseList();
-        addStudent_search_onAction();
+        addStudent_search_onKeyTyped();
 
         availableCourseShowListData();
+        studentGradesShowListData();
+        studentGradeSearch_onKeyTyped();
     }
 }

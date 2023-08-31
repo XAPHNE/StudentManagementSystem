@@ -12,6 +12,9 @@ public class StudentData {
     private Date birthDate;
     private String status;
     private String image;
+    private Double firstSem;
+    private Double secondSem;
+    private Double finals;
 
     public StudentData (Integer studentNum, String year, String course, String firstName, String lastName, String gender, Date birthDate, String status, String image) {
         this.studentNum = studentNum;
@@ -23,6 +26,15 @@ public class StudentData {
         this.birthDate = birthDate;
         this.status = status;
         this.image = image;
+    }
+
+    public StudentData (Integer studentNum, String year, String course, Double firstSem, Double secondSem, Double finals) {
+        this.studentNum = studentNum;
+        this.year = year;
+        this.course = course;
+        this.firstSem = firstSem;
+        this.secondSem = secondSem;
+        this.finals = finals;
     }
 
     public Integer getStudentNum() {
@@ -59,5 +71,17 @@ public class StudentData {
 
     public String getImage() {
         return image;
+    }
+
+    public Double getFirstSem() {
+        return firstSem;
+    }
+
+    public Double getSecondSem() {
+        return secondSem;
+    }
+
+    public Double getFinals() {
+        return finals;
     }
 }

@@ -31,9 +31,7 @@ public class StudentManagementApplication extends Application {
         });
 
         // Reset opacity on mouse release
-        root.setOnMouseReleased((MouseEvent event) -> {
-            primaryStage.setOpacity(1);
-        });
+        root.setOnMouseReleased((MouseEvent event) -> primaryStage.setOpacity(1));
 
         Scene scene = new Scene(root);
 
