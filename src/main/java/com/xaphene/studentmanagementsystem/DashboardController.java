@@ -1024,8 +1024,6 @@ public class DashboardController implements Initializable {
         studentGrade_tableView.setItems(sortList);
     }
     public void studentGradesUpdateBtn_OnAction () {
-//        double finalCheck1 = 0;
-//        double finalCheck2 = 0;
         String checkData = "SELECT * FROM student_grade WHERE studentNum = '"
                 + studentGrade_studentNum.getText() + "'";
         connect = DatabaseConnection.connectDb();
@@ -1033,16 +1031,9 @@ public class DashboardController implements Initializable {
         try {
             prepare = connect.prepareStatement(checkData);
             result = prepare.executeQuery();
-//            if (result.next()){
-//                finalCheck1 = result.getDouble("first_sem");
-//                finalCheck2 = result.getDouble("second_sem");
-//            }
-//            if (finalCheck1 == 0 && finalCheck2 == 0){
-//                finalResult = 0;
-//            } else {
-                finalResult = (Double.parseDouble(studentGrade_firstSem.getText())
-                        + Double.parseDouble(studentGrade_secondSem.getText()))/2;
-//            }
+            finalResult = (Double.parseDouble(studentGrade_firstSem.getText())
+                    + Double.parseDouble(studentGrade_secondSem.getText()))/2;
+
             String updateData = "UPDATE student_grade SET "
                     + "studentNum = '" + studentGrade_studentNum.getText()
                     + "', year = '" + studentGrade_year.getText()
