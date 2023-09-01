@@ -3,11 +3,11 @@
 ## JavaFX Student Management System Project
 
 ### Disclaimer
-- Welcome to our JavaFX Student Management System project, inspired by [MarcoMan's](https://github.com/marcoman2) [original work](https://github.com/marcoman2/StudentManagementSystem).
-- This project marks our exciting journey into the world of JavaFX.
-- A huge shoutout to MarcoMan for his invaluable YouTube tutorial, which guided us through this project's creation.
-- While this project shares its foundation with MarcoMan's, we've introduced several enhancements and customized the methods to suit our needs.
-- This project is just the beginning; we plan to apply the knowledge gained here to future JavaFX projects.
+- Welcome to my JavaFX Student Management System project, inspired by [MarcoMan's](https://github.com/marcoman2) [original work](https://github.com/marcoman2/StudentManagementSystem).
+- This project marks my exciting journey into the world of JavaFX.
+- A huge shoutout to MarcoMan for his invaluable YouTube [tutorial](https://www.youtube.com/watch?v=FJeuiB5PqXc), which guided me through this project's creation.
+- While this project shares its foundation with MarcoMan's, I've introduced several enhancements and customized the methods to suit my needs.
+- This project is just the beginning; I plan to apply the knowledge gained here to future JavaFX projects.
 
 ## Software Requirements
 ### Before you dive in, make sure to download and install the following:
@@ -19,7 +19,7 @@
 
 ## Installation
 ### Configuring SceneBuilder
-#### Before opening the `view.fxml` files in SceneBuilder, we need to add essential dependencies.
+#### Before opening the `view.fxml` files in SceneBuilder, you need to add essential dependencies.
 
 1. Add the following dependencies to SceneBuilder:
    1. `io.github.palexdev:materialfx:11.16.1`
@@ -65,4 +65,4 @@
 ### Running the Project
 You can run the project by pressing **`Shift + F10`** on the `src/main/java/com/xaphene/studentmanagementsystem/StudentManagementApplication.java` file.
 
-Now, enjoy the benefits of our Student Management System!
+Now, enjoy the benefits of my Student Management System!
