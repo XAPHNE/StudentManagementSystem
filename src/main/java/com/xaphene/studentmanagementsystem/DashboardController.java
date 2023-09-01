@@ -2,6 +2,7 @@ package com.xaphene.studentmanagementsystem;
 
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
+import javafx.scene.chart.XYChart;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.collections.FXCollections;
@@ -264,6 +265,13 @@ public class DashboardController implements Initializable {
     }
 //    END CODE FOR MINIMIZE BUTTON
 
+    public void displayUsername () {
+        username.setText(GetData.username);
+    }
+    public void defaultNav () {
+        home_btn.setStyle("-fx-background-color: linear-gradient(to bottom right, #3f82ae, #26bf7d);");
+    }
+
 //    START CODE FOR FORM SWITCHING
     public void switchFormOnAction(ActionEvent event){
         if (event.getSource() == home_btn) {
@@ -276,6 +284,14 @@ public class DashboardController implements Initializable {
             addStudent_btn.setStyle("-fx-background-color: transparent");
             availableCourses_btn.setStyle("-fx-background-color: transparent");
             studentGrade_btn.setStyle("-fx-background-color: transparent");
+
+            homeDisplayTotalEnrolledStudents();
+            homeDisplayMaleEnrolled();
+            homeDisplayFemaleEnrolled();
+
+            homeDisplayTotalEnrolledChart();
+            homeDisplayFemaleEnrolledChart();
+            homeDisplayMaleEnrolledChart();
         } else if (event.getSource() == addStudent_btn) {
             home_form.setVisible(false);
             addStudent_form.setVisible(true);
@@ -316,7 +332,7 @@ public class DashboardController implements Initializable {
             availableCourses_btn.setStyle("-fx-background-color: transparent");
             studentGrade_btn.setStyle("-fx-background-color: linear-gradient(to bottom right, #3f82ae, #26bf7d);");
             studentGradesShowListData();
-            studentGradeSearch_onKeyTyped();
+            studentGradeSearch_onAction();
         }
     }
 //    END CODE FOR FORM SWITCHING
@@ -358,6 +374,90 @@ public class DashboardController implements Initializable {
         }catch (Exception e) {e.printStackTrace();}
     }
 //    END CODE FOR LOGOUT BUTTON
+
+//    START CODE FOR HOME FORM
+    public void homeDisplayTotalEnrolledStudents () {
+        String sql = "SELECT COUNT(id) FROM student WHERE status = 'Enrolled'";
+        connect = DatabaseConnection.connectDb();
+        try {
+            int countEnrolled = 0;
+            prepare = connect.prepareStatement(sql);
+            result = prepare.executeQuery();
+            if (result.next()){
+                countEnrolled = result.getInt("COUNT(id)");
+            }
+            home_totalEnrolled.setText(String.valueOf(countEnrolled));
+        } catch (Exception e){e.printStackTrace();}
+    }
+    public void homeDisplayFemaleEnrolled () {
+        String sql = "SELECT COUNT(id) FROM student WHERE gender = 'Female' AND status = 'Enrolled'";
+        connect = DatabaseConnection.connectDb();
+        try {
+            int countFemale = 0;
+            prepare = connect.prepareStatement(sql);
+            result = prepare.executeQuery();
+            if (result.next()){
+                countFemale = result.getInt("COUNT(id)");
+            }
+            home_totalFemale.setText(String.valueOf(countFemale));
+        } catch (Exception e) {e.printStackTrace();}
+    }
+    public void homeDisplayMaleEnrolled () {
+        String sql = "SELECT COUNT(id) FROM student WHERE gender = 'Male' AND status = 'Enrolled'";
+        connect = DatabaseConnection.connectDb();
+        try {
+            int countMale = 0;
+            prepare = connect.prepareStatement(sql);
+            result = prepare.executeQuery();
+            if (result.next()){
+                countMale = result.getInt("COUNT(id)");
+            }
+            home_totalMale.setText(String.valueOf(countMale));
+        } catch (Exception e){e.printStackTrace();}
+    }
+    public void homeDisplayTotalEnrolledChart () {
+        home_totalEnrolledChart.getData().clear();
+        String sql = "SELECT date, COUNT(id) FROM student WHERE status = 'Enrolled' GROUP BY date ORDER BY TIMESTAMP(date) ASC LIMIT 5";
+        connect = DatabaseConnection.connectDb();
+        try {
+            XYChart.Series chart = new XYChart.Series();
+            prepare = connect.prepareStatement(sql);
+            result = prepare.executeQuery();
+            while (result.next()){
+                chart.getData().add(new XYChart.Data(result.getString(1), result.getInt(2)));
+            }
+            home_totalEnrolledChart.getData().add(chart);
+        } catch (Exception e) {e.printStackTrace();}
+    }
+    public void homeDisplayFemaleEnrolledChart () {
+        home_totalFemaleChart.getData().clear();
+        String sql = "SELECT date, COUNT(id) FROM student WHERE gender = 'Female' AND status = 'Enrolled' GROUP BY date ORDER BY TIMESTAMP(date) ASC LIMIT 5";
+        connect = DatabaseConnection.connectDb();
+        try {
+            XYChart.Series chart = new XYChart.Series();
+            prepare = connect.prepareStatement(sql);
+            result = prepare.executeQuery();
+            while (result.next()){
+                chart.getData().add(new XYChart.Data(result.getString(1), result.getInt(2)));
+            }
+            home_totalFemaleChart.getData().add(chart);
+        } catch (Exception e) {e.printStackTrace();}
+    }
+    public void homeDisplayMaleEnrolledChart () {
+        home_totalMaleChart.getData().clear();
+        String sql = "SELECT date, COUNT(id) FROM student WHERE gender = 'Male' AND status = 'Enrolled' GROUP BY date ORDER BY TIMESTAMP(date) ASC LIMIT 5";
+        connect = DatabaseConnection.connectDb();
+        try {
+            XYChart.Series chart = new XYChart.Series();
+            prepare = connect.prepareStatement(sql);
+            result = prepare.executeQuery();
+            while (result.next()){
+                chart.getData().add(new XYChart.Data(result.getString(1), result.getInt(2)));
+            }
+            home_totalMaleChart.getData().add(chart);
+        } catch (Exception e) {e.printStackTrace();}
+    }
+//    END CODE FOR HOME FORM
 
 //    START CODE FOR ADD STUDENT FORM
     public ObservableList <StudentData> addStudentListData () {
@@ -896,7 +996,7 @@ public class DashboardController implements Initializable {
         studentGrade_firstSem.setText(String.valueOf(studentD.getFirstSem()));
         studentGrade_secondSem.setText(String.valueOf(studentD.getSecondSem()));
     }
-    public void studentGradeSearch_onKeyTyped() {
+    public void studentGradeSearch_onAction() {
         FilteredList <StudentData> filter = new FilteredList<>(studentGradesList, e-> true);
         studentGrade_search.textProperty().addListener((Observable, oldValue, newValue) ->{
             filter.setPredicate(predictateStudentData ->{
@@ -923,10 +1023,85 @@ public class DashboardController implements Initializable {
         sortList.comparatorProperty().bind(studentGrade_tableView.comparatorProperty());
         studentGrade_tableView.setItems(sortList);
     }
+    public void studentGradesUpdateBtn_OnAction () {
+//        double finalCheck1 = 0;
+//        double finalCheck2 = 0;
+        String checkData = "SELECT * FROM student_grade WHERE studentNum = '"
+                + studentGrade_studentNum.getText() + "'";
+        connect = DatabaseConnection.connectDb();
+        double finalResult = 0;
+        try {
+            prepare = connect.prepareStatement(checkData);
+            result = prepare.executeQuery();
+//            if (result.next()){
+//                finalCheck1 = result.getDouble("first_sem");
+//                finalCheck2 = result.getDouble("second_sem");
+//            }
+//            if (finalCheck1 == 0 && finalCheck2 == 0){
+//                finalResult = 0;
+//            } else {
+                finalResult = (Double.parseDouble(studentGrade_firstSem.getText())
+                        + Double.parseDouble(studentGrade_secondSem.getText()))/2;
+//            }
+            String updateData = "UPDATE student_grade SET "
+                    + "studentNum = '" + studentGrade_studentNum.getText()
+                    + "', year = '" + studentGrade_year.getText()
+                    + "', course = '" + studentGrade_course.getText()
+                    + "', first_sem = '" + studentGrade_firstSem.getText()
+                    + "', second_sem = '" + studentGrade_secondSem.getText()
+                    + "', final = '" + finalResult + "' WHERE studentNum = '"
+                    + studentGrade_studentNum.getText() + "'";
+            Alert alert;
+            if (studentGrade_studentNum.getText().isEmpty()
+                    || studentGrade_year.getText().isEmpty()
+                    || studentGrade_course.getText().isEmpty()){
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Fields cannot be empty");
+                alert.showAndWait();
+            } else {
+                alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Confirmation Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Are you sure you want to update Student # " + studentGrade_studentNum.getText() + "?");
+                Optional <ButtonType> option = alert.showAndWait();
+                if (option.get().equals(ButtonType.OK)){
+                    statement = connect.createStatement();
+                    statement.executeUpdate(updateData);
+                    alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Information Message");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Successfully Updated");
+                    alert.showAndWait();
+                    //  TO LOAD THE UPDATED TABLE AFTER OPERATION
+                    studentGradesShowListData();
+                    //  TO CLEAR THE TEXT FIELDS
+                    studentGradeClearBtn_onAction();
+                } else return;
+            }
+        } catch (Exception e) {e.printStackTrace();}
+    }
+    public void studentGradeClearBtn_onAction () {
+        studentGrade_studentNum.setText("");
+        studentGrade_year.setText("");
+        studentGrade_course.setText("");
+        studentGrade_firstSem.setText("");
+        studentGrade_secondSem.setText("");
+    }
 //    END CODE FOR GRADES OF STUDENTS FORM
 
     @Override
     public void initialize (URL url, ResourceBundle resourceBundle) {
+        displayUsername();
+        defaultNav();
+        homeDisplayTotalEnrolledStudents();
+        homeDisplayMaleEnrolled();
+        homeDisplayFemaleEnrolled();
+
+        homeDisplayTotalEnrolledChart();
+        homeDisplayFemaleEnrolledChart();
+        homeDisplayMaleEnrolledChart();
         //  TO SHOW IMMEDIATELY WHEN PROCEEDED TO DASHBOARD APPLICATION FORM
         addStudentShowListData();
         addStudent_yearList();
@@ -937,6 +1112,6 @@ public class DashboardController implements Initializable {
 
         availableCourseShowListData();
         studentGradesShowListData();
-        studentGradeSearch_onKeyTyped();
+        studentGradeSearch_onAction();
     }
 }

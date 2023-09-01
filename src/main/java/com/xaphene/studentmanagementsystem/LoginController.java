@@ -54,6 +54,7 @@ public class LoginController {
             }else {
                 if (result.next()) {
 //                    PROCEDING TO DASHBOARD FORM
+                    GetData.username = usernameMFXTextField.getText();
                     alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Information Message");
                     alert.setHeaderText(null);

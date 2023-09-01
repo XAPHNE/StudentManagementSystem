@@ -68,7 +68,7 @@
                                  </font>
                               </Label>
                               <Line endX="72.5" layoutX="113.0" layoutY="204.0" startX="-100.0" stroke="WHITE" />
-                              <Button fx:id="home_btn" layoutX="9.0" layoutY="247.0" mnemonicParsing="false" onAction="#switchFormOnAction" prefHeight="35.0" prefWidth="180.0" style="-fx-background-color: linear-gradient(to bottom right, #3f82ae, #26bf7d);" styleClass="nav-btn" stylesheets="@../css/dashboard-style.css" text="Home">
+                              <Button fx:id="home_btn" layoutX="9.0" layoutY="247.0" mnemonicParsing="false" onAction="#switchFormOnAction" prefHeight="35.0" prefWidth="180.0" styleClass="nav-btn" stylesheets="@../css/dashboard-style.css" text="Home">
                                  <graphic>
                                     <FontIcon iconColor="WHITE" iconLiteral="fas-home" />
                                  </graphic>
@@ -110,7 +110,7 @@
                <center>
                   <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                      <children>
-                        <AnchorPane fx:id="home_form" layoutX="101.0" layoutY="161.0" prefHeight="560.0" prefWidth="900.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <AnchorPane fx:id="home_form" layoutX="101.0" layoutY="161.0" prefHeight="560.0" prefWidth="900.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <children>
                               <AnchorPane layoutX="14.0" layoutY="14.0" prefHeight="535.0" prefWidth="873.0" stylesheets="@../css/dashboard-style.css">
                                  <styleClass>
@@ -368,7 +368,7 @@
                               </AnchorPane>
                            </children>
                         </AnchorPane>
-                        <AnchorPane fx:id="studentGrade_form" layoutX="14.0" layoutY="14.0" prefHeight="560.0" prefWidth="900.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <AnchorPane fx:id="studentGrade_form" layoutX="14.0" layoutY="14.0" prefHeight="560.0" prefWidth="900.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <children>
                               <AnchorPane layoutX="14.0" layoutY="16.0" prefHeight="529.0" prefWidth="317.0" stylesheets="@../css/dashboard-style.css">
                                  <styleClass>
@@ -392,8 +392,8 @@
                                           <Font size="15.0" />
                                        </font>
                                     </Label>
-                                    <Button fx:id="studentGrade_updateBtn" layoutX="164.0" layoutY="366.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="85.0" styleClass="update-btn" stylesheets="@../css/dashboard-style.css" text="Update" />
-                                    <Button fx:id="studentGrade_clearBtn" layoutX="70.0" layoutY="366.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="85.0" styleClass="clear-btn" stylesheets="@../css/dashboard-style.css" text="Clear" />
+                                    <Button fx:id="studentGrade_updateBtn" layoutX="164.0" layoutY="366.0" mnemonicParsing="false" onAction="#studentGradesUpdateBtn_OnAction" prefHeight="35.0" prefWidth="85.0" styleClass="update-btn" stylesheets="@../css/dashboard-style.css" text="Update" />
+                                    <Button fx:id="studentGrade_clearBtn" layoutX="70.0" layoutY="366.0" mnemonicParsing="false" onAction="#studentGradeClearBtn_onAction" prefHeight="35.0" prefWidth="85.0" styleClass="clear-btn" stylesheets="@../css/dashboard-style.css" text="Clear" />
                                     <Label fx:id="studentGrade_year" layoutX="113.0" layoutY="88.0" prefHeight="24.0" prefWidth="190.0" styleClass="label-info" stylesheets="@../css/dashboard-style.css" />
                                     <Label fx:id="studentGrade_course" layoutX="112.0" layoutY="129.0" prefHeight="24.0" prefWidth="190.0" styleClass="label-info" stylesheets="@../css/dashboard-style.css" />
                                     <Label layoutX="36.0" layoutY="174.0" text="1st Sem:">
@@ -426,7 +426,7 @@
                                           <TableColumn fx:id="studentGrade_col_final" prefWidth="86.0" text="Final" />
                                        </columns>
                                     </TableView>
-                                    <TextField fx:id="studentGrade_search" layoutX="14.0" layoutY="14.0" onAction="#studentGradeSearch_onKeyTyped" prefHeight="24.0" prefWidth="270.0" promptText="Search" styleClass="search" stylesheets="@../css/dashboard-style.css" />
+                                    <TextField fx:id="studentGrade_search" layoutX="14.0" layoutY="14.0" onAction="#studentGradeSearch_onAction" prefHeight="24.0" prefWidth="270.0" promptText="Search" styleClass="search" stylesheets="@../css/dashboard-style.css" />
                                     <FontIcon iconLiteral="fa-search" iconSize="20" layoutX="21.0" layoutY="33.0" />
                                  </children>
                               </AnchorPane>
